@@ -56,7 +56,7 @@ class Adafruit_GFX : public Print {
     fillCircleHelper(int16_t x0, int16_t y0, int16_t r, uint8_t cornername,
       int16_t delta, uint16_t color),
 	  drawPentagram(int16_t x0, int16_t y0, int16_t r0, uint16_t color),
-	 drawEllipse(int16_t x1, int16_t y1, int16_t x2, int16_t y2, int16_t a, uint16_t color),
+	//  drawEllipse(int16_t x1, int16_t y1, int16_t x2, int16_t y2, int16_t a, uint16_t color),
     drawTriangle(int16_t x0, int16_t y0, int16_t x1, int16_t y1,
       int16_t x2, int16_t y2, uint16_t color),
     fillTriangle(int16_t x0, int16_t y0, int16_t x1, int16_t y1,
@@ -170,7 +170,7 @@ public:
      */
     void fillEllipse(int16_t x0, int16_t y0, int16_t rx, int16_t ry, uint16_t color);
 
-    
+
 };
 
 class Adafruit_GFX_Button {

@@ -396,19 +396,19 @@ void Adafruit_GFX::drawPentagram(int16_t x0, int16_t y0,
 }
 
 // Draw a ellipse outline
-void Adafruit_GFX::drawEllipse(int16_t x1, int16_t y1, int16_t x2, int16_t y2, int16_t a, uint16_t color) {
-    int16_t max_x = ((x1 > x2 ? x1 : x2) + a > 128 ? (x1 > x2 ? x1 : x2) + a : 128);
-    int16_t max_y = ((y1 > y2 ? y1 : y2) + a > 64 ? (y1 > y2 ? y1 : y2) + a : 64);
-    for (int16_t x = ((x1 > x2 ? x2 : x1) - a > 0 ? (x1 > x2 ? x2 : x1) - a : 0 ); x <= max_x; x++) {
-        for (int16_t y = ((y1 > y2 ? y2 : y1) - a > 0 ? (y1 > y2 ? y2 : y1) - a : 0); y <= max_y; y++) {
-            int32_t distance = sqrt((x - x1) * (x - x1) + (y - y1) * (y - y1)) + sqrt((x - x2) * (x - x2) + (y - y2) * (y - y2));
-            if (distance-a == a) {
-                writePixel(x, y, color);
-            }
-        }
-    }
-    endWrite();
-}
+// void Adafruit_GFX::drawEllipse(int16_t x1, int16_t y1, int16_t x2, int16_t y2, int16_t a, uint16_t color) {
+//     int16_t max_x = ((x1 > x2 ? x1 : x2) + a > 128 ? (x1 > x2 ? x1 : x2) + a : 128);
+//     int16_t max_y = ((y1 > y2 ? y1 : y2) + a > 64 ? (y1 > y2 ? y1 : y2) + a : 64);
+//     for (int16_t x = ((x1 > x2 ? x2 : x1) - a > 0 ? (x1 > x2 ? x2 : x1) - a : 0 ); x <= max_x; x++) {
+//         for (int16_t y = ((y1 > y2 ? y2 : y1) - a > 0 ? (y1 > y2 ? y2 : y1) - a : 0); y <= max_y; y++) {
+//             int32_t distance = sqrt((x - x1) * (x - x1) + (y - y1) * (y - y1)) + sqrt((x - x2) * (x - x2) + (y - y2) * (y - y2));
+//             if (distance-a == a) {
+//                 writePixel(x, y, color);
+//             }
+//         }
+//     }
+//     endWrite();
+// }
 
 
 // Draw a triangle
@@ -1391,7 +1391,7 @@ void GFXcanvas16::fillScreen(uint16_t color) {
 
 
 
-
+////////////////////////////////////////
 // 在文件末尾或合适位置添加以下代码
 void Adafruit_GFX::drawEllipse(int16_t x0, int16_t y0, int16_t rx, int16_t ry, uint16_t color) {
     // 输入参数验证
