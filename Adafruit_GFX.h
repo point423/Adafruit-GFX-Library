@@ -56,7 +56,6 @@ class Adafruit_GFX : public Print {
     fillCircleHelper(int16_t x0, int16_t y0, int16_t r, uint8_t cornername,
       int16_t delta, uint16_t color),
       drawPentagram(int16_t x0, int16_t y0, int16_t radius, uint16_t color),
-	 drawEllipse(int16_t x1, int16_t y1, int16_t x2, int16_t y2, int16_t a, uint16_t color),
     drawTriangle(int16_t x0, int16_t y0, int16_t x1, int16_t y1,
       int16_t x2, int16_t y2, uint16_t color),
     fillTriangle(int16_t x0, int16_t y0, int16_t x1, int16_t y1,
@@ -141,6 +140,36 @@ class Adafruit_GFX : public Print {
     _cp437; // If set, use correct CP437 charset (default is off)
   GFXfont
     *gfxFont;
+
+
+
+
+
+
+
+    // 在Adafruit_GFX类中添加以下声明（建议放在其他绘图方法附近）
+public:
+    /**
+     * 绘制椭圆（空心）
+     * @param x0      椭圆中心x坐标
+     * @param y0      椭圆中心y坐标
+     * @param rx      水平半径（宽度的一半）
+     * @param ry      垂直半径（高度的一半）
+     * @param color   绘制颜色
+     */
+    void drawEllipse(int16_t x0, int16_t y0, int16_t rx, int16_t ry, uint16_t color);
+    
+    /**
+     * 绘制填充椭圆
+     * @param x0      椭圆中心x坐标
+     * @param y0      椭圆中心y坐标
+     * @param rx      水平半径（宽度的一半）
+     * @param ry      垂直半径（高度的一半）
+     * @param color   填充颜色
+     */
+    void fillEllipse(int16_t x0, int16_t y0, int16_t rx, int16_t ry, uint16_t color);
+
+
 };
 
 class Adafruit_GFX_Button {

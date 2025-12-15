@@ -373,19 +373,19 @@ void Adafruit_GFX::fillRoundRect(int16_t x, int16_t y, int16_t w,
 
 
 // Draw a ellipse outline
-void Adafruit_GFX::drawEllipse(int16_t x1, int16_t y1, int16_t x2, int16_t y2, int16_t a, uint16_t color) {
-    int16_t max_x = ((x1 > x2 ? x1 : x2) + a > 128 ? (x1 > x2 ? x1 : x2) + a : 128);
-    int16_t max_y = ((y1 > y2 ? y1 : y2) + a > 64 ? (y1 > y2 ? y1 : y2) + a : 64);
-    for (int16_t x = ((x1 > x2 ? x2 : x1) - a > 0 ? (x1 > x2 ? x2 : x1) - a : 0 ); x <= max_x; x++) {
-        for (int16_t y = ((y1 > y2 ? y2 : y1) - a > 0 ? (y1 > y2 ? y2 : y1) - a : 0); y <= max_y; y++) {
-            int32_t distance = sqrt((x - x1) * (x - x1) + (y - y1) * (y - y1)) + sqrt((x - x2) * (x - x2) + (y - y2) * (y - y2));
-            if (distance-a == a) {
-                writePixel(x, y, color);
-            }
-        }
-    }
-    endWrite();
-}
+// void Adafruit_GFX::drawEllipse(int16_t x1, int16_t y1, int16_t x2, int16_t y2, int16_t a, uint16_t color) {
+//     int16_t max_x = ((x1 > x2 ? x1 : x2) + a > 128 ? (x1 > x2 ? x1 : x2) + a : 128);
+//     int16_t max_y = ((y1 > y2 ? y1 : y2) + a > 64 ? (y1 > y2 ? y1 : y2) + a : 64);
+//     for (int16_t x = ((x1 > x2 ? x2 : x1) - a > 0 ? (x1 > x2 ? x2 : x1) - a : 0 ); x <= max_x; x++) {
+//         for (int16_t y = ((y1 > y2 ? y2 : y1) - a > 0 ? (y1 > y2 ? y2 : y1) - a : 0); y <= max_y; y++) {
+//             int32_t distance = sqrt((x - x1) * (x - x1) + (y - y1) * (y - y1)) + sqrt((x - x2) * (x - x2) + (y - y2) * (y - y2));
+//             if (distance-a == a) {
+//                 writePixel(x, y, color);
+//             }
+//         }
+//     }
+//     endWrite();
+// }
 
 
 // Draw a triangle
@@ -1367,6 +1367,7 @@ void GFXcanvas16::fillScreen(uint16_t color) {
 }
 
 
+
 /**************************************************************************/
 /*!
    @brief    Draw a pentagram (5-pointed star)
@@ -1399,4 +1400,127 @@ void Adafruit_GFX::drawPentagram(int16_t x0, int16_t y0, int16_t radius, uint16_
     endWrite();
 }
 
+
+
+
+////////////////////////////////////////
+// 在文件末尾或合适位置添加以下代码
+void Adafruit_GFX::drawEllipse(int16_t x0, int16_t y0, int16_t rx, int16_t ry, uint16_t color) {
+    // 输入参数验证
+    if (rx <= 0 || ry <= 0) {
+        return;  // 半径必须为正数
+    }
+    
+    int16_t x, y;
+    int32_t rx2 = rx * rx;
+    int32_t ry2 = ry * ry;
+    int32_t twoRx2 = 2 * rx2;
+    int32_t twoRy2 = 2 * ry2;
+    int32_t p;
+    int32_t px = 0;
+    int32_t py = twoRx2 * ry;
+    
+    // 第一区域（斜率大于-1）
+    x = 0;
+    y = ry;
+    
+    // 绘制第一组对称点
+    drawEllipsePoints(x0, y0, x, y, color);
+    
+    // 区域1（从顶部开始，向右移动）
+    p = ry2 - (rx2 * ry) + (0.25 * rx2);
+    while (px < py) {
+        x++;
+        px += twoRy2;
+        if (p < 0) {
+            p += ry2 + px;
+        } else {
+            y--;
+            py -= twoRx2;
+            p += ry2 + px - py;
+        }
+        drawEllipsePoints(x0, y0, x, y, color);
+    }
+    
+    // 区域2（从右侧开始，向下移动）
+    p = ry2 * (x + 0.5) * (x + 0.5) + rx2 * (y - 1) * (y - 1) - rx2 * ry2;
+    while (y > 0) {
+        y--;
+        py -= twoRx2;
+        if (p > 0) {
+            p += rx2 - py;
+        } else {
+            x++;
+            px += twoRy2;
+            p += rx2 - py + px;
+        }
+        drawEllipsePoints(x0, y0, x, y, color);
+    }
+}
+
+// 辅助函数：绘制椭圆上的四个对称点
+void Adafruit_GFX::drawEllipsePoints(int16_t x0, int16_t y0, int16_t x, int16_t y, uint16_t color) {
+    drawPixel(x0 + x, y0 + y, color);  // 第一象限
+    drawPixel(x0 - x, y0 + y, color);  // 第二象限
+    drawPixel(x0 + x, y0 - y, color);  // 第四象限
+    drawPixel(x0 - x, y0 - y, color);  // 第三象限
+}
+
+
+void Adafruit_GFX::fillEllipse(int16_t x0, int16_t y0, int16_t rx, int16_t ry, uint16_t color) {
+    // 输入参数验证
+    if (rx <= 0 || ry <= 0) {
+        return;
+    }
+    
+    int16_t x, y;
+    int32_t rx2 = rx * rx;
+    int32_t ry2 = ry * ry;
+    int32_t twoRx2 = 2 * rx2;
+    int32_t twoRy2 = 2 * ry2;
+    int32_t p;
+    int32_t px = 0;
+    int32_t py = twoRx2 * ry;
+    
+    x = 0;
+    y = ry;
+    
+    // 绘制第一条水平线
+    drawFastHLine(x0 - x, y0, 2 * x + 1, color);
+    
+    // 区域1
+    p = ry2 - (rx2 * ry) + (0.25 * rx2);
+    while (px < py) {
+        x++;
+        px += twoRy2;
+        if (p < 0) {
+            p += ry2 + px;
+        } else {
+            // 绘制两条水平线（上下对称）
+            drawFastHLine(x0 - x, y0 - y, 2 * x + 1, color);
+            drawFastHLine(x0 - x, y0 + y, 2 * x + 1, color);
+            y--;
+            py -= twoRx2;
+            p += ry2 + px - py;
+        }
+    }
+    
+    // 区域2
+    p = ry2 * (x + 0.5) * (x + 0.5) + rx2 * (y - 1) * (y - 1) - rx2 * ry2;
+    while (y > 0) {
+        // 绘制两条水平线（上下对称）
+        drawFastHLine(x0 - x, y0 - y, 2 * x + 1, color);
+        drawFastHLine(x0 - x, y0 + y, 2 * x + 1, color);
+        
+        y--;
+        py -= twoRx2;
+        if (p > 0) {
+            p += rx2 - py;
+        } else {
+            x++;
+            px += twoRy2;
+            p += rx2 - py + px;
+        }
+    }
+}
 
