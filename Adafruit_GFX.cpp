@@ -370,30 +370,7 @@ void Adafruit_GFX::fillRoundRect(int16_t x, int16_t y, int16_t w,
     endWrite();
 }
 
-// Draw a Pentagram
-void Adafruit_GFX::drawPentagram(int16_t x0, int16_t y0,
-        int16_t r0, uint16_t color) {
-	int xa, ya;
-    int xb, yb;
-    int xc, yc;
-    int xd, yd;
-    int xe, ye;
-    xa = x0;
-    ya = y0 - r0;
-    xb = x0 - r0 * sin(PI / 180 * 72);
-    yb = y0 + r0 * -(cos(PI / 180 * 72));
-    xc = x0 - r0 * -(sin(PI / 180 * 36));
-    yc = y0 - r0 * -(cos(PI / 180 * 36));
-    xd = x0 + r0 * -(sin(PI / 180 * 36));
-    yd = y0 - r0 * -(cos(PI / 180 * 36));
-    xe = x0 + r0 * sin(PI / 180 * 72);
-    ye = y0 + r0 * -(cos(PI / 180 * 72));
-    drawLine(xa, ya, xc, yc, color);
-    drawLine(xa, ya, xd, yd, color);
-    drawLine(xb, yb, xc, yc, color);
-	drawLine(xb, yb, xe, ye, color);
-	drawLine(xd, yd, xe, ye, color);
-}
+
 
 // Draw a ellipse outline
 void Adafruit_GFX::drawEllipse(int16_t x1, int16_t y1, int16_t x2, int16_t y2, int16_t a, uint16_t color) {
@@ -1387,6 +1364,39 @@ void GFXcanvas16::fillScreen(uint16_t color) {
             for(i=0; i<pixels; i++) buffer[i] = color;
         }
     }
+}
+
+
+/**************************************************************************/
+/*!
+   @brief    Draw a pentagram (5-pointed star)
+    @param    x0      Center point x coordinate
+    @param    y0      Center point y coordinate
+    @param    radius  Radius of the outer circle of the star
+    @param    color   16-bit 5-6-5 Color to draw with
+*/
+/**************************************************************************/
+void Adafruit_GFX::drawPentagram(int16_t x0, int16_t y0, int16_t radius, uint16_t color) {
+    if (radius <= 0) return;
+    startWrite();
+
+    int16_t x[5], y[5];
+    // Calculate the 5 vertices of the pentagram
+    for (int i = 0; i < 5; i++) {
+        // Angle for each point. Start at -90 degrees to make the top point straight up.
+        float angle = -M_PI / 2.0 + (i * 2.0 * M_PI / 5.0);
+        x[i] = x0 + radius * cos(angle);
+        y[i] = y0 + radius * sin(angle);
+    }
+
+    // A pentagram connects every second vertex of a pentagon
+    drawLine(x[0], y[0], x[2], y[2], color);
+    drawLine(x[2], y[2], x[4], y[4], color);
+    drawLine(x[4], y[4], x[1], y[1], color);
+    drawLine(x[1], y[1], x[3], y[3], color);
+    drawLine(x[3], y[3], x[0], y[0], color);
+
+    endWrite();
 }
 
 
